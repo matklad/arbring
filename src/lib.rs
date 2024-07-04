@@ -1,4 +1,5 @@
 mod badcounter;
+mod bank;
 
 use std::collections::VecDeque;
 
