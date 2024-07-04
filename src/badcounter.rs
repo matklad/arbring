@@ -4,13 +4,12 @@ use std::{
     atomic::Ordering::{self, SeqCst},
     mpsc, Arc, Condvar, Mutex,
   },
-  thread::{self, ScopedJoinHandle},
+  thread,
 };
-
-use arbtest::arbitrary::size_hint::or;
 
 #[derive(Default)]
 struct BadCounter {
+  // NB: This is a spiced-up AtomicU32, not just std::sync one!
   value: AtomicU32,
 }
 
@@ -207,6 +206,6 @@ impl<'scope, State: 'scope> Drop for ControlledThread<'scope, State> {
       self.unblock();
     }
     self.sender.take().unwrap();
-    self.handle.take().unwrap().join();
+    self.handle.take().unwrap().join().unwrap();
   }
 }
